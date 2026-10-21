@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroSphere | Better Farm, Better Harvest</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { agrogreen: '#2E7D32', agrodark: '#0B3D2E', agrolight: '#A5D6A7', bgmain: '#F5F7FA' },
+                    fontFamily: { poppins: ['Poppins', 'sans-serif'], inter: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-bgmain font-inter text-gray-800 h-screen flex overflow-hidden relative">
+
+    <!-- 🔐 LOGIN / REGISTER SCREEN (Overlay) -->
+    <div id="auth-screen" class="absolute inset-0 bg-agrodark z-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-96">
+            <div class="text-center mb-8">
+                <i class="fa-solid fa-leaf text-4xl text-agrogreen mb-2"></i>
+                <h2 class="font-poppins font-bold text-2xl text-gray-800">Welcome to AgroSphere</h2>
+                <p class="text-sm text-gray-500">Better Farm, Better Harvest</p>
+            </div>
+
+            <!-- 1. LOGIN FORM -->
+            <form id="login-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="login-email" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-agrogreen">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-agrogreen">
+                </div>
+                <button type="submit" class="w-full bg-agrogreen text-white py-2 rounded-lg font-semibold hover:bg-green-800 transition">Login to Dashboard</button>
+            </form>
+
+            <!-- 2. REGISTER FORM -->
+            <form id="register-form" class="hidden">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" id="reg-name" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-agrogreen">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="reg-email" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-agrogreen">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="reg-password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-agrogreen">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Register As</label>
+                    <select id="reg-role" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-agrogreen bg-white">
+                        <option value="farmer">Farmer</option>
+                        <option value="admin">Agricultural Officer (Admin)</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-agrogreen text-white py-2 rounded-lg font-semibold hover:bg-green-800 transition">Create Account</button>
+            </form>
+
+            <!-- 3. TOGGLE BUTTONS -->
+            <div class="text-center mt-4">
+                <button type="button" id="btn-show-register" class="text-sm text-gray-600 hover:text-agrogreen transition">
+                    Don't have an account? <span class="text-agrogreen font-semibold">Register here</span>
+                </button>
+                <button type="button" id="btn-show-login" class="text-sm text-gray-600 hover:text-agrogreen transition hidden">
+                    Already have an account? <span class="text-agrogreen font-semibold">Login here</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-agrodark text-white flex flex-col h-full shadow-lg z-10">
+        <div class="p-6 flex items-center gap-3 border-b border-gray-700">
+            <i class="fa-solid fa-leaf text-3xl text-agrolight"></i>
+            <div>
+                <h1 class="font-poppins font-bold text-xl leading-tight">AgroSphere</h1>
+                <p class="text-xs text-agrolight opacity-80">Better Farm, Better Harvest</p>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="#" class="flex items-center gap-4 px-4 py-3 bg-agrogreen rounded-lg text-white font-medium transition"><i class="fa-solid fa-house w-5"></i> Dashboard</a>
+            <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition"><i class="fa-solid fa-brain w-5"></i> AI Decisions</a>
+            <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition"><i class="fa-solid fa-hard-drive w-5"></i> Data Buffer</a>
+        </nav>
+
+        <!-- BOTTOM LOGOUT SECTION -->
+        <div class="p-4 border-t border-gray-700">
+            <button id="logout-btn" class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-red-900/40 hover:bg-red-800 text-red-400 hover:text-white rounded-lg transition-colors duration-200 font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto relative">
+        <header class="bg-white h-16 flex items-center justify-between px-8 shadow-sm shrink-0">
+            <div class="flex items-center gap-4">
+                <span class="font-medium text-gray-600">Paddy Field 01</span>
+                <span id="network-status" class="bg-green-100 text-green-700 text-xs px-3 py-1.5 rounded-full flex items-center gap-2 font-semibold transition-colors duration-300">
+                    <span id="network-dot" class="w-2 h-2 bg-green-500 rounded-full"></span> Cloud Connected
+                </span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="simulate-btn" class="px-4 py-2 bg-gray-800 text-white text-sm font-semibold rounded-lg hover:bg-gray-700 transition shadow-md">
+                    <i class="fa-solid fa-wifi text-red-400 mr-2"></i> Simulate Offline
+                </button>
+                <div class="w-10 h-10 rounded-full bg-agrogreen text-white flex items-center justify-center font-bold font-poppins">M</div>
+            </div>
+        </header>
+
+        <div class="p-8 max-w-[1600px] mx-auto w-full">
+            <div class="mb-6 flex justify-between items-end">
+                <div>
+                    <h2 class="font-poppins text-2xl font-bold text-gray-800">Field Telemetry & Analytics</h2>
+                    <p class="text-gray-500 text-sm mt-1">Integrated data from IoT Pole, Analytics, and XAI</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-500">Last Sync</p>
+                    <p id="last-sync" class="font-poppins font-semibold text-gray-800">Waiting...</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                
+                <!-- SENSOR CARDS (3 Columns, 2 Rows = 6 Cards) -->
+                <div class="lg:col-span-2 grid grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Nitrogen -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                        <p class="text-gray-500 text-sm font-medium">Nitrogen (N)</p>
+                        <h3 id="val-n" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-n" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                    <!-- Phosphorus -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                        <p class="text-gray-500 text-sm font-medium">Phosphorus (P)</p>
+                        <h3 id="val-p" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-p" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                    <!-- Potassium -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                        <p class="text-gray-500 text-sm font-medium">Potassium (K)</p>
+                        <h3 id="val-k" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-k" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                    <!-- EC -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                        <p class="text-gray-500 text-sm font-medium">Conductivity (EC)</p>
+                        <h3 id="val-ec" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-ec" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                    <!-- pH -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-pink-500"></div>
+                        <p class="text-gray-500 text-sm font-medium">Soil pH</p>
+                        <h3 id="val-ph" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-ph" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                    <!-- Moisture -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-400"></div>
+                        <p class="text-gray-500 text-sm font-medium">Soil Moisture</p>
+                        <h3 id="val-hum" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-hum" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                    <!-- Temp -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                        <p class="text-gray-500 text-sm font-medium">Temperature</p>
+                        <h3 id="val-temp" class="font-poppins text-2xl font-bold text-gray-800">0</h3>
+                        <span id="status-temp" class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-md font-semibold">Optimal</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: NOVELTY (System Status + AI) -->
+                <div class="space-y-4">
+                    <!-- SYSTEM STATUS -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <h3 class="font-poppins font-semibold text-sm text-gray-800 mb-3 border-b pb-2">Edge-Cloud Integration Status</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600"><i class="fa-solid fa-cloud text-green-500 mr-2"></i>Cloud API</span>
+                                <span id="cloud-status-text" class="text-xs font-semibold text-green-600">Connected</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600"><i class="fa-solid fa-database text-blue-500 mr-2"></i>Local Buffer (Edge)</span>
+                                <span id="buffer-status-text" class="text-xs font-semibold text-gray-500">0 records</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- XAI Recommendation -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 relative">
+                        <div class="absolute top-0 right-0 bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-1 rounded-bl-lg">XAI Output</div>
+                        <h3 class="font-poppins font-semibold text-sm text-gray-800 mb-2">AI Crop Recommendation</h3>
+                        
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 text-xl"><i class="fa-solid fa-seedling"></i></div>
+                            <div>
+                                <p class="font-poppins font-bold text-gray-800 text-lg">Rice (BG 300)</p>
+                                <p class="text-xs text-green-600 font-semibold"><i class="fa-solid fa-check-circle"></i> Confidence: 92%</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            <p class="text-xs font-semibold text-gray-700 mb-1">Explainable AI Reasoning:</p>
+                            <ul class="text-[11px] text-gray-600 space-y-1 list-disc pl-4">
+                                <li>Soil Moisture is optimal (55%)</li>
+                                <li>Nitrogen level supports high yield</li>
+                                <li>Temperature within ideal range</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS SECTION -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <h3 class="font-poppins font-semibold text-sm mb-2">NPK Trends</h3>
+                    <div class="h-48"><canvas id="npkChart"></canvas></div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <h3 class="font-poppins font-semibold text-sm mb-2">Moisture & Temperature</h3>
+                    <div class="h-48"><canvas id="mtChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
